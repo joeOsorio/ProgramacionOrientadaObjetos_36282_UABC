@@ -1,0 +1,1802 @@
+// ========== INTERFACES ==========
+
+/**
+ * Interfaz para objetos que pueden ser vendidos
+ */
+interface Vendible {
+
+    double calcularPrecio();
+
+    boolean estaDisponible();
+
+    String obtenerDescripcion();
+}
+
+/**
+ * Interfaz para operaciones CRUD genéricas
+ */
+interface OperacionesCRUD<T> {
+
+    void agregar(T objeto);
+
+    T buscar(int id);
+
+    boolean actualizar(int id, T objeto);
+
+    boolean eliminar(int id);
+
+    void listar();
+}
+
+// ========== CLASES MODELO ==========
+/**
+ * Clase base para productos del café
+ */
+abstract class Producto implements Vendible {
+
+    protected int id;
+    protected String nombre;
+    protected String tipo;
+    protected double precio;
+    protected boolean disponible;
+    protected static int contadorId = 1;
+
+    public Producto(String nombre, String tipo, double precio) {
+        this.id = contadorId++;
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.precio = precio;
+        this.disponible = true;
+    }
+
+    // Getters y Setters
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
+
+    @Override
+    public double calcularPrecio() {
+        return precio;
+    }
+
+    @Override
+    public boolean estaDisponible() {
+        return disponible;
+    }
+
+    @Override
+    public String obtenerDescripcion() {
+        return nombre + " (" + tipo + ") - $" + precio;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | " + obtenerDescripcion()
+                + " | " + (disponible ? "Disponible" : "No disponible");
+    }
+}
+
+/**
+ * Clase para bebidas
+ */
+class Bebida extends Producto {
+
+    private String tamaño;
+    private boolean esCaliente;
+
+    public Bebida(String nombre, double precio, String tamaño, boolean esCaliente) {
+        super(nombre, "Bebida", precio);
+        this.tamaño = tamaño;
+        this.esCaliente = esCaliente;
+    }
+
+    public String getTamaño() {
+        return tamaño;
+    }
+
+    public void setTamaño(String tamaño) {
+        this.tamaño = tamaño;
+    }
+
+    public boolean isEsCaliente() {
+        return esCaliente;
+    }
+
+    public void setEsCaliente(boolean esCaliente) {
+        this.esCaliente = esCaliente;
+    }
+
+    @Override
+    public String obtenerDescripcion() {
+        return super.obtenerDescripcion() + " [" + tamaño + ", "
+                + (esCaliente ? "Caliente" : "Frío") + "]";
+    }
+}
+
+/**
+ * Clase para alimentos
+ */
+class Alimento extends Producto {
+
+    private String categoria;
+    private boolean esVegano;
+
+    public Alimento(String nombre, double precio, String categoria, boolean esVegano) {
+        super(nombre, "Alimento", precio);
+        this.categoria = categoria;
+        this.esVegano = esVegano;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public boolean isEsVegano() {
+        return esVegano;
+    }
+
+    public void setEsVegano(boolean esVegano) {
+        this.esVegano = esVegano;
+    }
+
+    @Override
+    public String obtenerDescripcion() {
+        return super.obtenerDescripcion() + " [" + categoria
+                + (esVegano ? ", Vegano" : "") + "]";
+    }
+}
+
+/**
+ * Clase para clientes
+ */
+class Cliente {
+
+    private int id;
+    private String nombre;
+    private String contacto;
+    private int ordenesRealizadas;
+    private static int contadorId = 1;
+
+    public Cliente(String nombre, String contacto) {
+        this.id = contadorId++;
+        this.nombre = nombre;
+        this.contacto = contacto;
+        this.ordenesRealizadas = 0;
+    }
+
+    // Getters y Setters
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(String contacto) {
+        this.contacto = contacto;
+    }
+
+    public int getOrdenesRealizadas() {
+        return ordenesRealizadas;
+    }
+
+    public void incrementarOrdenes() {
+        this.ordenesRealizadas++;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | " + nombre + " | " + contacto
+                + " | Órdenes: " + ordenesRealizadas;
+    }
+}
+
+/**
+ * Clase abstracta para empleados
+ */
+abstract class Empleado {
+
+    protected int id;
+    protected String nombre;
+    protected String cargo;
+    protected double salario;
+    protected static int contadorId = 1;
+
+    public Empleado(String nombre, String cargo, double salario) {
+        this.id = contadorId++;
+        this.nombre = nombre;
+        this.cargo = cargo;
+        this.salario = salario;
+    }
+
+    // Getters y Setters
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public double getSalario() {
+        return salario;
+    }
+
+    public void setSalario(double salario) {
+        this.salario = salario;
+    }
+
+    // Método abstracto para atender órdenes (polimorfismo)
+    public abstract void atenderOrden(Orden orden);
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | " + nombre + " | " + cargo + " | $" + salario;
+    }
+}
+
+/**
+ * Clase Barista que hereda de Empleado
+ */
+class Barista extends Empleado {
+
+    private String especialidad;
+
+    public Barista(String nombre, double salario, String especialidad) {
+        super(nombre, "Barista", salario);
+        this.especialidad = especialidad;
+    }
+
+    public String getEspecialidad() {
+        return especialidad;
+    }
+
+    public void setEspecialidad(String especialidad) {
+        this.especialidad = especialidad;
+    }
+
+    @Override
+    public void atenderOrden(Orden orden) {
+        System.out.println("Barista " + nombre + " está preparando la orden #" + orden.getId());
+        System.out.println("Especialidad: " + especialidad);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Especialidad: " + especialidad;
+    }
+}
+
+/**
+ * Clase Mesero que hereda de Empleado
+ */
+class Mesero extends Empleado {
+
+    private int mesasAsignadas;
+
+    public Mesero(String nombre, double salario, int mesasAsignadas) {
+        super(nombre, "Mesero", salario);
+        this.mesasAsignadas = mesasAsignadas;
+    }
+
+    public int getMesasAsignadas() {
+        return mesasAsignadas;
+    }
+
+    public void setMesasAsignadas(int mesasAsignadas) {
+        this.mesasAsignadas = mesasAsignadas;
+    }
+
+    @Override
+    public void atenderOrden(Orden orden) {
+        System.out.println("Mesero " + nombre + " está atendiendo la orden #" + orden.getId());
+        System.out.println("Mesas asignadas: " + mesasAsignadas);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Mesas: " + mesasAsignadas;
+    }
+}
+
+/**
+ * Clase para representar un item en una orden
+ */
+class ItemOrden {
+
+    private Producto producto;
+    private int cantidad;
+
+    public ItemOrden(Producto producto, int cantidad) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double calcularSubtotal() {
+        return producto.calcularPrecio() * cantidad;
+    }
+
+    @Override
+    public String toString() {
+        return cantidad + "x " + producto.getNombre() + " - $" + calcularSubtotal();
+    }
+}
+
+/**
+ * Clase Orden (Composición con productos)
+ */
+class Orden {
+
+    private int id;
+    private Cliente cliente;
+    private Empleado empleado;
+    private List<ItemOrden> items;
+    private String estado;
+    private Date fecha;
+    private static int contadorId = 1;
+
+    public Orden(Cliente cliente, Empleado empleado) {
+        this.id = contadorId++;
+        this.cliente = cliente;
+        this.empleado = empleado;
+        this.items = new ArrayList<>();
+        this.estado = "Pendiente";
+        this.fecha = new Date();
+    }
+
+    // Getters y Setters
+    public int getId() {
+        return id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public List<ItemOrden> getItems() {
+        return items;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void agregarItem(Producto producto, int cantidad) {
+        if (producto.estaDisponible()) {
+            items.add(new ItemOrden(producto, cantidad));
+        } else {
+            System.out.println("Producto " + producto.getNombre() + " no está disponible");
+        }
+    }
+
+    public void eliminarItem(int indice) {
+        if (indice >= 0 && indice < items.size()) {
+            items.remove(indice);
+        }
+    }
+
+    public double calcularTotal() {
+        return items.stream().mapToDouble(ItemOrden::calcularSubtotal).sum();
+    }
+
+    public void procesarOrden() {
+        if (!items.isEmpty()) {
+            empleado.atenderOrden(this);
+            cliente.incrementarOrdenes();
+            estado = "En proceso";
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== ORDEN #").append(id).append(" ===\n");
+        sb.append("Cliente: ").append(cliente.getNombre()).append("\n");
+        sb.append("Empleado: ").append(empleado.getNombre()).append("\n");
+        sb.append("Estado: ").append(estado).append("\n");
+        sb.append("Fecha: ").append(fecha).append("\n");
+        sb.append("Items:\n");
+        for (ItemOrden item : items) {
+            sb.append("  - ").append(item).append("\n");
+        }
+        sb.append("TOTAL: $").append(String.format("%.2f", calcularTotal()));
+        return sb.toString();
+    }
+}
+
+/**
+ * Clase Menu (Agregación con productos)
+ */
+class Menu {
+
+    private List<Producto> productos;
+
+    public Menu() {
+        this.productos = new ArrayList<>();
+    }
+
+    public void agregarProducto(Producto producto) {
+        productos.add(producto);
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public List<Producto> getProductosDisponibles() {
+        return productos.stream()
+                .filter(Producto::estaDisponible)
+                .collect(Collectors.toList());
+    }
+
+    public void mostrarMenu() {
+        System.out.println("\n=== MENÚ DEL CAFÉ ===");
+        productos.forEach(System.out::println);
+    }
+}
+
+// ========== CLASES GESTORAS (CRUD) ==========
+/**
+ * Gestor de productos
+ */
+class GestorProductos implements OperacionesCRUD<Producto> {
+
+    private List<Producto> productos;
+
+    public GestorProductos() {
+        this.productos = new ArrayList<>();
+    }
+
+    @Override
+    public void agregar(Producto producto) {
+        productos.add(producto);
+        System.out.println("Producto agregado: " + producto.getNombre());
+    }
+
+    @Override
+    public Producto buscar(int id) {
+        return productos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public boolean actualizar(int id, Producto producto) {
+        Producto existente = buscar(id);
+        if (existente != null) {
+            existente.setNombre(producto.getNombre());
+            existente.setPrecio(producto.getPrecio());
+            existente.setDisponible(producto.isDisponible());
+            System.out.println("Producto actualizado: " + existente.getNombre());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminar(int id) {
+        Producto producto = buscar(id);
+        if (producto != null) {
+            productos.remove(producto);
+            System.out.println("Producto eliminado: " + producto.getNombre());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void listar() {
+        System.out.println("\n=== LISTA DE PRODUCTOS ===");
+        productos.forEach(System.out::println);
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+}
+
+/**
+ * Gestor de clientes
+ */
+class GestorClientes implements OperacionesCRUD<Cliente> {
+
+    private List<Cliente> clientes;
+
+    public GestorClientes() {
+        this.clientes = new ArrayList<>();
+    }
+
+    @Override
+    public void agregar(Cliente cliente) {
+        clientes.add(cliente);
+        System.out.println("Cliente registrado: " + cliente.getNombre());
+    }
+
+    @Override
+    public Cliente buscar(int id) {
+        return clientes.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public boolean actualizar(int id, Cliente cliente) {
+        Cliente existente = buscar(id);
+        if (existente != null) {
+            existente.setNombre(cliente.getNombre());
+            existente.setContacto(cliente.getContacto());
+            System.out.println("Cliente actualizado: " + existente.getNombre());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminar(int id) {
+        Cliente cliente = buscar(id);
+        if (cliente != null) {
+            clientes.remove(cliente);
+            System.out.println("Cliente eliminado: " + cliente.getNombre());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void listar() {
+        System.out.println("\n=== LISTA DE CLIENTES ===");
+        clientes.forEach(System.out::println);
+    }
+
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+}
+
+/**
+ * Gestor de empleados
+ */
+class GestorEmpleados implements OperacionesCRUD<Empleado> {
+
+    private List<Empleado> empleados;
+
+    public GestorEmpleados() {
+        this.empleados = new ArrayList<>();
+    }
+
+    @Override
+    public void agregar(Empleado empleado) {
+        empleados.add(empleado);
+        System.out.println("Empleado registrado: " + empleado.getNombre());
+    }
+
+    @Override
+    public Empleado buscar(int id) {
+        return empleados.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public boolean actualizar(int id, Empleado empleado) {
+        Empleado existente = buscar(id);
+        if (existente != null) {
+            existente.setNombre(empleado.getNombre());
+            existente.setSalario(empleado.getSalario());
+            System.out.println("Empleado actualizado: " + existente.getNombre());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminar(int id) {
+        Empleado empleado = buscar(id);
+        if (empleado != null) {
+            empleados.remove(empleado);
+            System.out.println("Empleado eliminado: " + empleado.getNombre());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void listar() {
+        System.out.println("\n=== LISTA DE EMPLEADOS ===");
+        empleados.forEach(System.out::println);
+    }
+
+    public List<Empleado> getEmpleados() {
+        return empleados;
+    }
+}
+
+/**
+ * Gestor de órdenes
+ */
+class GestorOrdenes {
+
+    private List<Orden> ordenes;
+
+    public GestorOrdenes() {
+        this.ordenes = new ArrayList<>();
+    }
+
+    public void crearOrden(Cliente cliente, Empleado empleado) {
+        Orden orden = new Orden(cliente, empleado);
+        ordenes.add(orden);
+        System.out.println("Nueva orden creada: #" + orden.getId());
+    }
+
+    public Orden buscarOrden(int id) {
+        return ordenes.stream()
+                .filter(o -> o.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void cancelarOrden(int id) {
+        Orden orden = buscarOrden(id);
+        if (orden != null) {
+            orden.setEstado("Cancelada");
+            System.out.println("Orden #" + id + " cancelada");
+        }
+    }
+
+    public void completarOrden(int id) {
+        Orden orden = buscarOrden(id);
+        if (orden != null) {
+            orden.setEstado("Completada");
+            System.out.println("Orden #" + id + " completada");
+        }
+    }
+
+    public void listarOrdenes() {
+        System.out.println("\n=== LISTA DE ÓRDENES ===");
+        ordenes.forEach(System.out::println);
+    }
+
+    public List<Orden> getOrdenes() {
+        return ordenes;
+    }
+}
+
+// ========== CLASE PRINCIPAL ==========
+import java.util.*;
+
+import java.util.stream.Collectors;
+
+/**
+ * Clase principal del sistema CoffeePOS
+ */
+public class CoffeePOS {
+
+    private GestorProductos gestorProductos;
+    private GestorClientes gestorClientes;
+    private GestorEmpleados gestorEmpleados;
+    private GestorOrdenes gestorOrdenes;
+    private Menu menu;
+    private Scanner scanner;
+
+    public CoffeePOS() {
+        this.gestorProductos = new GestorProductos();
+        this.gestorClientes = new GestorClientes();
+        this.gestorEmpleados = new GestorEmpleados();
+        this.gestorOrdenes = new GestorOrdenes();
+        this.menu = new Menu();
+        this.scanner = new Scanner(System.in);
+        inicializarDatos();
+    }
+
+    /**
+     * Inicializa el sistema con datos de prueba
+     */
+    private void inicializarDatos() {
+        // Productos
+        Bebida espresso = new Bebida("Espresso", 3.50, "Pequeño", true);
+        Bebida latte = new Bebida("Latte", 4.50, "Mediano", true);
+        Bebida frapuccino = new Bebida("Frappuccino", 5.50, "Grande", false);
+        Alimento croissant = new Alimento("Croissant", 2.50, "Panadería", false);
+        Alimento ensalada = new Alimento("Ensalada Verde", 6.50, "Saludable", true);
+
+        gestorProductos.agregar(espresso);
+        gestorProductos.agregar(latte);
+        gestorProductos.agregar(frapuccino);
+        gestorProductos.agregar(croissant);
+        gestorProductos.agregar(ensalada);
+
+        menu.agregarProducto(espresso);
+        menu.agregarProducto(latte);
+        menu.agregarProducto(frapuccino);
+        menu.agregarProducto(croissant);
+        menu.agregarProducto(ensalada);
+
+        // Empleados
+        Barista barista1 = new Barista("María González", 2500.0, "Café Artesanal");
+        Mesero mesero1 = new Mesero("Carlos López", 2200.0, 8);
+        Barista barista2 = new Barista("Ana Torres", 2600.0, "Bebidas Frías");
+
+        gestorEmpleados.agregar(barista1);
+        gestorEmpleados.agregar(mesero1);
+        gestorEmpleados.agregar(barista2);
+
+        // Clientes
+        Cliente cliente1 = new Cliente("Juan Pérez", "juan@email.com");
+        Cliente cliente2 = new Cliente("María Smith", "maria@email.com");
+        Cliente cliente3 = new Cliente("Pedro Morales", "pedro@email.com");
+
+        gestorClientes.agregar(cliente1);
+        gestorClientes.agregar(cliente2);
+        gestorClientes.agregar(cliente3);
+
+        System.out.println("Sistema inicializado con datos de prueba");
+    }
+
+    /**
+     * Método principal que ejecuta el menú del sistema
+     */
+    public void ejecutar() {
+        int opcion;
+        do {
+            mostrarMenuPrincipal();
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+
+            switch (opcion) {
+                case 1:
+                    gestionarProductos();
+                    break;
+                case 2:
+                    gestionarClientes();
+                    break;
+                case 3:
+                    gestionarEmpleados();
+                    break;
+                case 4:
+                    gestionarOrdenes();
+                    break;
+                case 5:
+                    menu.mostrarMenu();
+                    break;
+                case 6:
+                    realizarVentaDemo();
+                    break;
+                case 7:
+                    mostrarReportes();
+                    break;
+                case 0:
+                    System.out.println("¡Gracias por usar CoffeePOS!");
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+            }
+        } while (opcion != 0);
+    }
+
+    private void mostrarMenuPrincipal() {
+        System.out.println("\n╔════════════════════════════════╗");
+        System.out.println("║        COFFEEPOS SYSTEM        ║");
+        System.out.println("╠════════════════════════════════╣");
+        System.out.println("║ 1. Gestionar Productos         ║");
+        System.out.println("║ 2. Gestionar Clientes          ║");
+        System.out.println("║ 3. Gestionar Empleados         ║");
+        System.out.println("║ 4. Gestionar Órdenes           ║");
+        System.out.println("║ 5. Ver Menú                    ║");
+        System.out.println("║ 6. Realizar Venta (Demo)       ║");
+        System.out.println("║ 7. Reportes                    ║");
+        System.out.println("║ 0. Salir                       ║");
+        System.out.println("╚════════════════════════════════╝");
+        System.out.print("Seleccione una opción: ");
+    }
+
+    private void gestionarProductos() {
+        System.out.println("\n=== GESTIÓN DE PRODUCTOS ===");
+        System.out.println("1. Agregar producto");
+        System.out.println("2. Buscar producto");
+        System.out.println("3. Actualizar producto");
+        System.out.println("4. Eliminar producto");
+        System.out.println("5. Listar productos");
+        System.out.print("Opción: ");
+
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                agregarProducto();
+                break;
+            case 2:
+                buscarProducto();
+                break;
+            case 3:
+                actualizarProducto();
+                break;
+            case 4:
+                eliminarProducto();
+                break;
+            case 5:
+                gestorProductos.listar();
+                break;
+        }
+    }
+
+    private void agregarProducto() {
+        System.out.println("Tipo de producto (1-Bebida, 2-Alimento): ");
+        int tipo = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Precio: ");
+        double precio = scanner.nextDouble();
+        scanner.nextLine();
+
+        if (tipo == 1) {
+            System.out.print("Tamaño: ");
+            String tamaño = scanner.nextLine();
+            System.out.print("¿Es caliente? (true/false): ");
+            boolean esCaliente = scanner.nextBoolean();
+
+            Bebida bebida = new Bebida(nombre, precio, tamaño, esCaliente);
+            gestorProductos.agregar(bebida);
+            menu.agregarProducto(bebida);
+        } else {
+            System.out.print("Categoría: ");
+            String categoria = scanner.nextLine();
+            System.out.print("¿Es vegano? (true/false): ");
+            boolean esVegano = scanner.nextBoolean();
+
+            Alimento alimento = new Alimento(nombre, precio, categoria, esVegano);
+            gestorProductos.agregar(alimento);
+            menu.agregarProducto(alimento);
+        }
+    }
+
+    private void buscarProducto() {
+        System.out.print("ID del producto: ");
+        int id = scanner.nextInt();
+        Producto producto = gestorProductos.buscar(id);
+        if (producto != null) {
+            System.out.println("Producto encontrado: " + producto);
+        } else {
+            System.out.println("Producto no encontrado");
+        }
+    }
+
+    private void actualizarProducto() {
+        System.out.print("ID del producto a actualizar: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Producto existente = gestorProductos.buscar(id);
+        if (existente != null) {
+            System.out.print("Nuevo nombre (actual: " + existente.getNombre() + "): ");
+            String nombre = scanner.nextLine();
+            System.out.print("Nuevo precio (actual: " + existente.getPrecio() + "): ");
+            double precio = scanner.nextDouble();
+            System.out.print("¿Disponible? (true/false, actual: " + existente.isDisponible() + "): ");
+            boolean disponible = scanner.nextBoolean();
+
+            if (existente instanceof Bebida) {
+                Bebida bebidaActualizada = new Bebida(nombre, precio,
+                        ((Bebida) existente).getTamaño(), ((Bebida) existente).isEsCaliente());
+                bebidaActualizada.setDisponible(disponible);
+                gestorProductos.actualizar(id, bebidaActualizada);
+            } else {
+                Alimento alimentoActualizado = new Alimento(nombre, precio,
+                        ((Alimento) existente).getCategoria(), ((Alimento) existente).isEsVegano());
+                alimentoActualizado.setDisponible(disponible);
+                gestorProductos.actualizar(id, alimentoActualizado);
+            }
+        } else {
+            System.out.println("Producto no encontrado");
+        }
+    }
+
+    private void eliminarProducto() {
+        System.out.print("ID del producto a eliminar: ");
+        int id = scanner.nextInt();
+        System.out.print("¿Está seguro? (s/n): ");
+        String confirmacion = scanner.next();
+
+        if (confirmacion.equalsIgnoreCase("s")) {
+            if (gestorProductos.eliminar(id)) {
+                System.out.println("Producto eliminado exitosamente");
+            } else {
+                System.out.println("No se pudo eliminar el producto");
+            }
+        }
+    }
+
+    private void gestionarClientes() {
+        System.out.println("\n=== GESTIÓN DE CLIENTES ===");
+        System.out.println("1. Agregar cliente");
+        System.out.println("2. Buscar cliente");
+        System.out.println("3. Actualizar cliente");
+        System.out.println("4. Eliminar cliente");
+        System.out.println("5. Listar clientes");
+        System.out.print("Opción: ");
+
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                agregarCliente();
+                break;
+            case 2:
+                buscarCliente();
+                break;
+            case 3:
+                actualizarCliente();
+                break;
+            case 4:
+                eliminarCliente();
+                break;
+            case 5:
+                gestorClientes.listar();
+                break;
+        }
+    }
+
+    private void agregarCliente() {
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Contacto: ");
+        String contacto = scanner.nextLine();
+
+        Cliente cliente = new Cliente(nombre, contacto);
+        gestorClientes.agregar(cliente);
+    }
+
+    private void buscarCliente() {
+        System.out.print("ID del cliente: ");
+        int id = scanner.nextInt();
+        Cliente cliente = gestorClientes.buscar(id);
+        if (cliente != null) {
+            System.out.println("Cliente encontrado: " + cliente);
+        } else {
+            System.out.println("Cliente no encontrado");
+        }
+    }
+
+    private void actualizarCliente() {
+        System.out.print("ID del cliente a actualizar: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Cliente existente = gestorClientes.buscar(id);
+        if (existente != null) {
+            System.out.print("Nuevo nombre (actual: " + existente.getNombre() + "): ");
+            String nombre = scanner.nextLine();
+            System.out.print("Nuevo contacto (actual: " + existente.getContacto() + "): ");
+            String contacto = scanner.nextLine();
+
+            Cliente clienteActualizado = new Cliente(nombre, contacto);
+            gestorClientes.actualizar(id, clienteActualizado);
+        } else {
+            System.out.println("Cliente no encontrado");
+        }
+    }
+
+    private void eliminarCliente() {
+        System.out.print("ID del cliente a eliminar: ");
+        int id = scanner.nextInt();
+        System.out.print("¿Está seguro? (s/n): ");
+        String confirmacion = scanner.next();
+
+        if (confirmacion.equalsIgnoreCase("s")) {
+            if (gestorClientes.eliminar(id)) {
+                System.out.println("Cliente eliminado exitosamente");
+            } else {
+                System.out.println("No se pudo eliminar el cliente");
+            }
+        }
+    }
+
+    private void gestionarEmpleados() {
+        System.out.println("\n=== GESTIÓN DE EMPLEADOS ===");
+        System.out.println("1. Agregar empleado");
+        System.out.println("2. Buscar empleado");
+        System.out.println("3. Listar empleados");
+        System.out.print("Opción: ");
+
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                agregarEmpleado();
+                break;
+            case 2:
+                buscarEmpleado();
+                break;
+            case 3:
+                gestorEmpleados.listar();
+                break;
+        }
+    }
+
+    private void agregarEmpleado() {
+        System.out.println("Tipo de empleado (1-Barista, 2-Mesero): ");
+        int tipo = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Salario: ");
+        double salario = scanner.nextDouble();
+        scanner.nextLine();
+
+        if (tipo == 1) {
+            System.out.print("Especialidad: ");
+            String especialidad = scanner.nextLine();
+            Barista barista = new Barista(nombre, salario, especialidad);
+            gestorEmpleados.agregar(barista);
+        } else {
+            System.out.print("Mesas asignadas: ");
+            int mesas = scanner.nextInt();
+            Mesero mesero = new Mesero(nombre, salario, mesas);
+            gestorEmpleados.agregar(mesero);
+        }
+    }
+
+    private void buscarEmpleado() {
+        System.out.print("ID del empleado: ");
+        int id = scanner.nextInt();
+        Empleado empleado = gestorEmpleados.buscar(id);
+        if (empleado != null) {
+            System.out.println("Empleado encontrado: " + empleado);
+        } else {
+            System.out.println("Empleado no encontrado");
+        }
+    }
+
+    private void gestionarOrdenes() {
+        System.out.println("\n=== GESTIÓN DE ÓRDENES ===");
+        System.out.println("1. Crear nueva orden");
+        System.out.println("2. Buscar orden");
+        System.out.println("3. Cancelar orden");
+        System.out.println("4. Completar orden");
+        System.out.println("5. Listar órdenes");
+        System.out.print("Opción: ");
+
+        int opcion = scanner.nextInt();
+
+        switch (opcion) {
+            case 1:
+                crearOrden();
+                break;
+            case 2:
+                buscarOrden();
+                break;
+            case 3:
+                cancelarOrden();
+                break;
+            case 4:
+                completarOrden();
+                break;
+            case 5:
+                gestorOrdenes.listarOrdenes();
+                break;
+        }
+    }
+
+    private void crearOrden() {
+        System.out.print("ID del cliente: ");
+        int clienteId = scanner.nextInt();
+        System.out.print("ID del empleado: ");
+        int empleadoId = scanner.nextInt();
+
+        Cliente cliente = gestorClientes.buscar(clienteId);
+        Empleado empleado = gestorEmpleados.buscar(empleadoId);
+
+        if (cliente != null && empleado != null) {
+            gestorOrdenes.crearOrden(cliente, empleado);
+            System.out.println("Orden creada exitosamente");
+        } else {
+            System.out.println("Cliente o empleado no encontrado");
+        }
+    }
+
+    private void buscarOrden() {
+        System.out.print("ID de la orden: ");
+        int id = scanner.nextInt();
+        Orden orden = gestorOrdenes.buscarOrden(id);
+        if (orden != null) {
+            System.out.println(orden);
+        } else {
+            System.out.println("Orden no encontrada");
+        }
+    }
+
+    private void cancelarOrden() {
+        System.out.print("ID de la orden a cancelar: ");
+        int id = scanner.nextInt();
+        gestorOrdenes.cancelarOrden(id);
+    }
+
+    private void completarOrden() {
+        System.out.print("ID de la orden a completar: ");
+        int id = scanner.nextInt();
+        gestorOrdenes.completarOrden(id);
+    }
+
+    private void realizarVentaDemo() {
+        System.out.println("\n=== DEMO DE VENTA ===");
+
+        // Usar datos existentes para la demo
+        Cliente cliente = gestorClientes.getClientes().get(0);
+        Empleado empleado = gestorEmpleados.getEmpleados().get(0);
+
+        Orden orden = new Orden(cliente, empleado);
+
+        // Agregar algunos productos
+        List<Producto> productos = gestorProductos.getProductos();
+        if (!productos.isEmpty()) {
+            orden.agregarItem(productos.get(0), 2);
+            if (productos.size() > 1) {
+                orden.agregarItem(productos.get(1), 1);
+            }
+        }
+
+        System.out.println("Orden creada:");
+        System.out.println(orden);
+
+        orden.procesarOrden();
+        gestorOrdenes.getOrdenes().add(orden);
+
+        System.out.println("\nVenta completada exitosamente");
+    }
+
+    private void mostrarReportes() {
+        System.out.println("\n=== REPORTES ===");
+        System.out.println("Total de productos: " + gestorProductos.getProductos().size());
+        System.out.println("Total de clientes: " + gestorClientes.getClientes().size());
+        System.out.println("Total de empleados: " + gestorEmpleados.getEmpleados().size());
+        System.out.println("Total de órdenes: " + gestorOrdenes.getOrdenes().size());
+
+        double totalVentas = gestorOrdenes.getOrdenes().stream()
+                .mapToDouble(Orden::calcularTotal)
+                .sum();
+        System.out.println("Total en ventas: $" + String.format("%.2f", totalVentas));
+    }
+
+    /**
+     * Método principal
+     */
+    public static void main(String[] args) {
+        System.out.println("Iniciando CoffeePOS...");
+        System.out.println("1. Modo Consola");
+        System.out.println("2. Modo GUI");
+        System.out.print("Seleccione modo: ");
+
+        Scanner sc = new Scanner(System.in);
+        int modo = sc.nextInt();
+
+        if (modo == 1) {
+            CoffeePOS sistema = new CoffeePOS();
+            sistema.ejecutar();
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                new CoffeePOSGUI();
+            });
+        }
+    }
+}
+
+// ========== INTERFAZ GRÁFICA CON SWING ==========
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+import java.awt.event.ActionListener;
+
+/**
+ * Interfaz gráfica principal del sistema CoffeePOS
+ */
+class CoffeePOSGUI extends JFrame {
+
+    private GestorProductos gestorProductos;
+    private GestorClientes gestorClientes;
+    private GestorEmpleados gestorEmpleados;
+    private GestorOrdenes gestorOrdenes;
+    private Menu menu;
+
+    private JTabbedPane tabbedPane;
+    private DefaultListModel<String> modeloProductos;
+    private DefaultListModel<String> modeloClientes;
+    private DefaultListModel<String> modeloEmpleados;
+    private DefaultListModel<String> modeloOrdenes;
+
+    public CoffeePOSGUI() {
+        initializeSystem();
+        initializeGUI();
+        setVisible(true);
+    }
+
+    private void initializeSystem() {
+        gestorProductos = new GestorProductos();
+        gestorClientes = new GestorClientes();
+        gestorEmpleados = new GestorEmpleados();
+        gestorOrdenes = new GestorOrdenes();
+        menu = new Menu();
+
+        // Datos de prueba
+        initializeSampleData();
+    }
+
+    private void initializeSampleData() {
+        // Productos
+        Bebida espresso = new Bebida("Espresso", 3.50, "Pequeño", true);
+        Bebida latte = new Bebida("Latte", 4.50, "Mediano", true);
+        Alimento croissant = new Alimento("Croissant", 2.50, "Panadería", false);
+
+        gestorProductos.agregar(espresso);
+        gestorProductos.agregar(latte);
+        gestorProductos.agregar(croissant);
+
+        // Empleados
+        Barista barista = new Barista("María González", 2500.0, "Café Artesanal");
+        Mesero mesero = new Mesero("Carlos López", 2200.0, 8);
+
+        gestorEmpleados.agregar(barista);
+        gestorEmpleados.agregar(mesero);
+
+        // Clientes
+        Cliente cliente1 = new Cliente("Juan Pérez", "juan@email.com");
+        Cliente cliente2 = new Cliente("María Smith", "maria@email.com");
+
+        gestorClientes.agregar(cliente1);
+        gestorClientes.agregar(cliente2);
+    }
+
+    private void initializeGUI() {
+        setTitle("CoffeePOS - Sistema de Punto de Venta");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+
+        // Crear el panel con pestañas
+        tabbedPane = new JTabbedPane();
+
+        // Agregar pestañas
+        tabbedPane.addTab("Productos", createProductosPanel());
+        tabbedPane.addTab("Clientes", createClientesPanel());
+        tabbedPane.addTab("Empleados", createEmpleadosPanel());
+        tabbedPane.addTab("Órdenes", createOrdenesPanel());
+        tabbedPane.addTab("Menú", createMenuPanel());
+
+        add(tabbedPane, BorderLayout.CENTER);
+
+        // Panel de estado
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        statusPanel.add(new JLabel("CoffeePOS v1.0 - Sistema activo"));
+        add(statusPanel, BorderLayout.SOUTH);
+    }
+
+    private JPanel createProductosPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        // Lista de productos
+        modeloProductos = new DefaultListModel<>();
+        JList<String> listaProductos = new JList<>(modeloProductos);
+        JScrollPane scrollProductos = new JScrollPane(listaProductos);
+
+        // Panel de botones
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 5, 5));
+        JButton btnAgregar = new JButton("Agregar");
+        JButton btnEditar = new JButton("Editar");
+        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnRefrescar = new JButton("Refrescar");
+
+        buttonPanel.add(btnAgregar);
+        buttonPanel.add(btnEditar);
+        buttonPanel.add(btnEliminar);
+        buttonPanel.add(btnRefrescar);
+
+        // Eventos
+        btnAgregar.addActionListener(e -> mostrarDialogoAgregarProducto());
+        btnRefrescar.addActionListener(e -> actualizarListaProductos());
+        btnEliminar.addActionListener(e -> eliminarProductoSeleccionado(listaProductos));
+
+        panel.add(scrollProductos, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Cargar datos iniciales
+        actualizarListaProductos();
+
+        return panel;
+    }
+
+    private JPanel createClientesPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        modeloClientes = new DefaultListModel<>();
+        JList<String> listaClientes = new JList<>(modeloClientes);
+        JScrollPane scrollClientes = new JScrollPane(listaClientes);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 5, 5));
+        JButton btnAgregar = new JButton("Agregar");
+        JButton btnEditar = new JButton("Editar");
+        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnRefrescar = new JButton("Refrescar");
+
+        buttonPanel.add(btnAgregar);
+        buttonPanel.add(btnEditar);
+        buttonPanel.add(btnEliminar);
+        buttonPanel.add(btnRefrescar);
+
+        btnAgregar.addActionListener(e -> mostrarDialogoAgregarCliente());
+        btnRefrescar.addActionListener(e -> actualizarListaClientes());
+
+        panel.add(scrollClientes, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        actualizarListaClientes();
+
+        return panel;
+    }
+
+    private JPanel createEmpleadosPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        modeloEmpleados = new DefaultListModel<>();
+        JList<String> listaEmpleados = new JList<>(modeloEmpleados);
+        JScrollPane scrollEmpleados = new JScrollPane(listaEmpleados);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 5, 5));
+        JButton btnAgregar = new JButton("Agregar");
+        JButton btnEditar = new JButton("Editar");
+        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnRefrescar = new JButton("Refrescar");
+
+        buttonPanel.add(btnAgregar);
+        buttonPanel.add(btnEditar);
+        buttonPanel.add(btnEliminar);
+        buttonPanel.add(btnRefrescar);
+
+        btnAgregar.addActionListener(e -> mostrarDialogoAgregarEmpleado());
+        btnRefrescar.addActionListener(e -> actualizarListaEmpleados());
+
+        panel.add(scrollEmpleados, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        actualizarListaEmpleados();
+
+        return panel;
+    }
+
+    private JPanel createOrdenesPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        modeloOrdenes = new DefaultListModel<>();
+        JList<String> listaOrdenes = new JList<>(modeloOrdenes);
+        JScrollPane scrollOrdenes = new JScrollPane(listaOrdenes);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 5));
+        JButton btnNuevaOrden = new JButton("Nueva Orden");
+        JButton btnVerDetalles = new JButton("Ver Detalles");
+        JButton btnRefrescar = new JButton("Refrescar");
+
+        buttonPanel.add(btnNuevaOrden);
+        buttonPanel.add(btnVerDetalles);
+        buttonPanel.add(btnRefrescar);
+
+        btnNuevaOrden.addActionListener(e -> mostrarDialogoNuevaOrden());
+        btnRefrescar.addActionListener(e -> actualizarListaOrdenes());
+        btnVerDetalles.addActionListener(e -> mostrarDetallesOrden(listaOrdenes));
+
+        panel.add(scrollOrdenes, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        actualizarListaOrdenes();
+
+        return panel;
+    }
+
+    private JPanel createMenuPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+
+        StringBuilder menuText = new StringBuilder();
+        menuText.append("=== MENÚ DEL CAFÉ ===\n\n");
+
+        for (Producto producto : gestorProductos.getProductos()) {
+            menuText.append(producto.toString()).append("\n");
+        }
+
+        textArea.setText(menuText.toString());
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    // Métodos para actualizar listas
+    private void actualizarListaProductos() {
+        modeloProductos.clear();
+        for (Producto p : gestorProductos.getProductos()) {
+            modeloProductos.addElement(p.toString());
+        }
+    }
+
+    private void actualizarListaClientes() {
+        modeloClientes.clear();
+        for (Cliente c : gestorClientes.getClientes()) {
+            modeloClientes.addElement(c.toString());
+        }
+    }
+
+    private void actualizarListaEmpleados() {
+        modeloEmpleados.clear();
+        for (Empleado e : gestorEmpleados.getEmpleados()) {
+            modeloEmpleados.addElement(e.toString());
+        }
+    }
+
+    private void actualizarListaOrdenes() {
+        modeloOrdenes.clear();
+        for (Orden o : gestorOrdenes.getOrdenes()) {
+            modeloOrdenes.addElement("Orden #" + o.getId() + " - " + o.getCliente().getNombre()
+                    + " - $" + String.format("%.2f", o.calcularTotal()));
+        }
+    }
+
+    // Diálogos
+    private void mostrarDialogoAgregarProducto() {
+        JDialog dialog = new JDialog(this, "Agregar Producto", true);
+        dialog.setSize(400, 300);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Campos
+        JTextField txtNombre = new JTextField(20);
+        JTextField txtPrecio = new JTextField(20);
+        JComboBox<String> cmbTipo = new JComboBox<>(new String[]{"Bebida", "Alimento"});
+
+        // Layout
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Nombre:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtNombre, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(new JLabel("Precio:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtPrecio, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(new JLabel("Tipo:"), gbc);
+        gbc.gridx = 1;
+        panel.add(cmbTipo, gbc);
+
+        // Botones
+        JPanel buttonPanel = new JPanel();
+        JButton btnGuardar = new JButton("Guardar");
+        JButton btnCancelar = new JButton("Cancelar");
+
+        btnGuardar.addActionListener(e -> {
+            try {
+                String nombre = txtNombre.getText().trim();
+                double precio = Double.parseDouble(txtPrecio.getText().trim());
+
+                if (nombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "El nombre es obligatorio");
+                    return;
+                }
+
+                Producto producto;
+                if (cmbTipo.getSelectedItem().equals("Bebida")) {
+                    producto = new Bebida(nombre, precio, "Mediano", true);
+                } else {
+                    producto = new Alimento(nombre, precio, "General", false);
+                }
+
+                gestorProductos.agregar(producto);
+                actualizarListaProductos();
+                dialog.dispose();
+
+                JOptionPane.showMessageDialog(this, "Producto agregado exitosamente");
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Precio inválido");
+            }
+        });
+
+        btnCancelar.addActionListener(e -> dialog.dispose());
+
+        buttonPanel.add(btnGuardar);
+        buttonPanel.add(btnCancelar);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        panel.add(buttonPanel, gbc);
+
+        dialog.add(panel);
+        dialog.setVisible(true);
+    }
+
+    private void mostrarDialogoAgregarCliente() {
+        JDialog dialog = new JDialog(this, "Agregar Cliente", true);
+        dialog.setSize(350, 200);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JTextField txtNombre = new JTextField(20);
+        JTextField txtContacto = new JTextField(20);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Nombre:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtNombre, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(new JLabel("Contacto:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtContacto, gbc);
+
+        JPanel buttonPanel = new JPanel();
+        JButton btnGuardar = new JButton("Guardar");
+        JButton btnCancelar = new JButton("Cancelar");
+
+        btnGuardar.addActionListener(e -> {
+            String nombre = txtNombre.getText().trim();
+            String contacto = txtContacto.getText().trim();
+
+            if (nombre.isEmpty() || contacto.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Todos los campos son obligatorios");
+                return;
+            }
+
+            Cliente cliente = new Cliente(nombre, contacto);
+            gestorClientes.agregar(cliente);
+            actualizarListaClientes();
+            dialog.dispose();
+
+            JOptionPane.showMessageDialog(this, "Cliente agregado exitosamente");
+        });
+
+        btnCancelar.addActionListener(e -> dialog.dispose());
+
+        buttonPanel.add(btnGuardar);
+        buttonPanel.add(btnCancelar);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        panel.add(buttonPanel, gbc);
+
+        dialog.add(panel);
+        dialog.setVisible(true);
+    }
+
+    private void mostrarDialogoAgregarEmpleado() {
+        JDialog dialog = new JDialog(this, "Agregar Empleado", true);
+        dialog.setSize(400, 300);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JTextField txtNombre = new JTextField(20);
+        JTextField txtSalario = new JTextField(20);
+        JComboBox<String> cmbTipo = new JComboBox<>(new String[]{"Barista", "Mesero"});
+        JTextField txtEspecialidad = new JTextField(20);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Nombre:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtNombre, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(new JLabel("Salario:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtSalario, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(new JLabel("Tipo:"), gbc);
+        gbc.gridx = 1;
+        panel.add(cmbTipo, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(new JLabel("Especialidad/Mesas:"), gbc);
+        gbc.gridx = 1;
+        panel.add(txtEspecialidad, gbc);
+
+        JPanel buttonPanel = new JPanel();
+        JButton btnGuardar = new JButton("Guardar");
+        JButton btnCancelar = new JButton("Cancelar");
+
+        btnGuardar.addActionListener(e -> {
+            try {
+                String nombre = txtNombre.getText().trim();
+                double salario = Double.parseDouble(txtSalario.getText().trim());
+                String especialidad = txtEspecialidad.getText().trim();
+
+                if (nombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "El nombre es obligatorio");
+                    return;
+                }
+
+                Empleado empleado;
+                if (cmbTipo.getSelectedItem().equals("Barista")) {
+                    empleado = new Barista(nombre, salario, especialidad.isEmpty() ? "General" : especialidad);
+                } else {
+                    int mesas = especialidad.isEmpty() ? 5 : Integer.parseInt(especialidad);
+                    empleado = new Mesero(nombre, salario, mesas);
+                }
+
+                gestorEmpleados.agregar(empleado);
+                actualizarListaEmpleados();
+                dialog.dispose();
+
+                JOptionPane.showMessageDialog(this, "Empleado agregado exitosamente");
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Datos numéricos inválidos");
+            }
+        });
+
+        btnCancelar.addActionListener(e -> dialog.dispose());
+
+        buttonPanel.add(btnGuardar);
+        buttonPanel.add(btnCancelar);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        panel.add(buttonPanel, gbc);
+
+        dialog.add(panel);
+        dialog.setVisible(true);
+    }
+
+    private void mostrarDialogoNuevaOrden() {
+        if (gestorClientes.getClientes().isEmpty() || gestorEmpleados.getEmpleados().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Necesita al menos un cliente y un empleado registrados");
+            return;
+        }
+
+        JDialog dialog = new JDialog(this, "Nueva Orden", true);
+        dialog.setSize(500, 400);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+        // Panel superior para cliente y empleado
+        JPanel topPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+
+        JComboBox<Cliente> cmbClientes = new JComboBox<>();
+        for (Cliente c : gestorClientes.getClientes()) {
+            cmbClientes.addItem(c);
+        }
+
+        JComboBox<Empleado> cmbEmpleados = new JComboBox<>();
+        for (Empleado e : gestorEmpleados.getEmpleados()) {
+            cmbEmpleados.addItem(e);
+        }
+
+        topPanel.add(new JLabel("Cliente:"));
+        topPanel.add(cmbClientes);
+        topPanel.add(new JLabel("Empleado:"));
+        topPanel.add(cmbEmpleados);
+
+        // Panel central para productos
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createTitledBorder("Productos"));
+
+        DefaultListModel<String> modeloProductosOrden = new DefaultListModel<>();
+        JList<String> listaProductosOrden = new JList<>(modeloProductosOrden);
+
+        JPanel productPanel = new JPanel(new BorderLayout());
+        JComboBox<Producto> cmbProductos = new JComboBox<>();
+        for (Producto p : gestorProductos.getProductos()) {
+            if (p.estaDisponible()) {
+                cmbProductos.addItem(p);
+
+            }

@@ -1,0 +1,73 @@
+public class CuentaBancaria{
+
+	private double saldo;
+
+	
+	CuentaBancaria(){
+		this.saldo = 0;
+	}
+
+	public void depositar(double deposito ){
+		this.saldo += deposito;
+	}
+
+	public void retiro(double retiro){
+		if(retiro < saldo){
+			this.saldo -= retiro;
+		}
+		
+	}
+	
+	public void mostrarSaldo(){
+		System.out.print("Salfo: %s",  saldo);
+
+	}
+
+}
+
+
+
+import java.util.*;
+
+public class PrincipalP{
+  private static void main(String [] args){
+	Scanner input = new Scanner(System.in);
+	int opcion = 0 ;
+	double saldo;
+
+		
+		do{
+			System.out.printf("Ingresa la opcion deseada")
+			System.out.printf("\n\t1 - Depositar");
+			System.out.printf("\n\t2 - Retirar");
+			System.out.printf("\n\t3 - Mostrar saldo");
+			System.out.printf("\n\t0 - Salir");
+			opcion = input.nextInt();
+			
+
+			switch(opcion){
+			
+			case 1:
+				System.out.printf("\nSaldo a Depositar");
+				saldo = input.nextInt();
+				CuentaBancaria.depositar(saldo);
+				CuentaBancaria.mostrarSaldo();
+								
+			case 2:
+				System.out.printf("\nSaldo a retirar");
+				saldo = input.nextInt();
+				CuentaBancaria.retirar(saldo);
+				CuentaBancaria.mostrarSaldo();
+			case 3:
+				System.out.printf("\nSaldo en cuenta");
+				CuentaBancaria.mostrarSaldo();
+			case 0:
+				System.out.printf("\nSaliendo del programa:");
+			}
+		}while(opcion != 0);
+
+	} 
+
+}
+
+
